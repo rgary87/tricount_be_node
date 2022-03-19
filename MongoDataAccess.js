@@ -41,6 +41,16 @@ class MongoDataAccess {
         return result.deletedCount;
     }
 
+    async deleteTrip(collectionName, uuid) {
+        const collection = this.database.collection(collectionName);
+
+        const query = {uuid: uuid};
+        const result = await collection.deleteOne(query);
+        console.log("Deleted " + result.deletedCount + " documents");
+        return result.deletedCount;
+    }
+
+
     async deleteAll(collectionName) {
         const collection = this.database.collection(collectionName);
 
@@ -60,6 +70,20 @@ class MongoDataAccess {
 
         for (let r of result) {
             console.log("Result is: " + r);
+        }
+        return result[0];
+    }
+
+    async findOneTrip(collectionName, uuid) {
+        const collection = this.database.collection(collectionName);
+
+        const query = {uuid: uuid};
+        const cursor = await collection.find(query);
+
+        let result = await cursor.toArray();
+
+        for (let r of result) {
+            console.log("Result is: %o", r);
         }
         return result[0];
     }
@@ -84,6 +108,13 @@ class MongoDataAccess {
         const result = await collection.insertOne(o);
         console.log("Inserted a document with _id: " + result.insertedId);
         return result.insertedId;
+    }
+
+    async updateTrip(collectionName, uuid, trip) {
+        const collection = this.database.collection(collectionName);
+        const query = {uuid: uuid};
+        let result = await collection.replaceOne(query, trip);
+        console.log("Update: %o", result);
     }
 
 }

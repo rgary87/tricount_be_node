@@ -1,11 +1,11 @@
 const {Participant} = require("./Participant");
 
 class Trip {
-    constructor(participant_list = [], spending_list = [], refund_list = [], total_amount = 0, default_number_of_days = 0, isInit = false) {
+    constructor(participant_list = [], spending_list = [], refund_list = [], total_amount = 0, default_number_of_days = 0, isInit = false, uuid = '') {
+        this.uuid = uuid;
         this.default_number_of_days = default_number_of_days;
         this._total_amount = total_amount;
         this.spending_list = spending_list;
-        this.refund_list = refund_list;
         this.participant_list = participant_list;
         this.isInit = isInit;
     }
