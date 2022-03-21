@@ -6,7 +6,6 @@ const router = express.Router();
 
 
 router.get('/:uuid', async function (req, res) {
-
     const mda = MongoDataAccess.getInstance();
     const result = await mda.findOneTrip("trip", req.params['uuid']);
     console.log("Get by uuid result: %o", result);
@@ -19,8 +18,8 @@ router.get('/:uuid', async function (req, res) {
     console.log("DONE on " + "trip");
 });
 
-router.post('/',async function (req, res) {
-    console.log("POST on %o with body: %o", "trip",  req.body);
+router.post('/', async function (req, res) {
+    console.log("POST on %o with body: %o", "trip", req.body);
     const mda = MongoDataAccess.getInstance();
 
     const result = await mda.insert("trip", req.body);
@@ -29,18 +28,21 @@ router.post('/',async function (req, res) {
     console.log("DONE on " + "trip");
 });
 
-router.post('/create',async function (req, res) {
-    console.log("POST on %o with body: %o", "trip/create",  req.body);
-    const mda = MongoDataAccess.getInstance();
-    const result = await mda.insert("trip", req.body);
+router.post('/create', async function (req, res) {
+    console.log("POST on %o with body: %o", "trip/create", req.body);
+    if (req.body.isInit) {
+        const mda = MongoDataAccess.getInstance();
+        const result = await mda.insert("trip", req.body);
+        console.log("mongo result: %o", result);
+    }
     res.statusCode = 200;
     res.json(req.body);
     console.log("DONE on " + "trip");
 });
 
 
-router.post('/calculation',async function (req, res) {
-    console.log("POST on %o with body: %o", "trip/calculation",  req.body);
+router.post('/calculation', async function (req, res) {
+    console.log("POST on %o with body: %o", "trip/calculation", req.body);
     const trip = req.body;
     const mda = MongoDataAccess.getInstance();
     // console.log("Request is: %o", trip);
@@ -65,12 +67,12 @@ router.post('/addRefund', async function (req, res) {
     console.log("DONE on " + "trip/addRefund");
 });
 
-router.delete('/',async function (req, res) {
+router.delete('/', async function (req, res) {
     console.log("DELETE on " + "trip");
     const mda = MongoDataAccess.getInstance();
     const result = await mda.delete("trip", req.body['id']);
     res.statusCode = 200;
-    res.json({removed:result});
+    res.json({removed: result});
     console.log("DONE on " + "trip");
 });
 

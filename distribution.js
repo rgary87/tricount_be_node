@@ -14,14 +14,15 @@ class Distribution {
 
         // distribute payed amounts to all concerned participants, prorated
         for (const spending of spending_list) {
+            let shareAll = spending.shared_with.length === 1 && spending.shared_with[0] === 'all';
             let days_for_this_spending = 0;
             for (const participant of participant_list) {
-                if (spending.shared_with.includes(participant.name)) {
+                if (shareAll || spending.shared_with.includes(participant.name)) {
                     days_for_this_spending += participant.day_count;
                 }
             }
             for (const participant of participant_list) {
-                if (spending.shared_with.includes(participant.name)) {
+                if (shareAll || spending.shared_with.includes(participant.name)) {
                     let prorated_shared_amount = spending.amount / days_for_this_spending * participant.day_count;
                     participant.owe_amount += prorated_shared_amount;
                 }
