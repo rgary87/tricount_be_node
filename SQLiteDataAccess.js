@@ -11,12 +11,24 @@ class SQLiteDataAccess {
         } else {
             SQLiteDataAccess.path = './db.db';
         }
+        sqlite.open(SQLiteDataAccess.path);
+        try {
+            sqlite.run('CREATE TABLE trips (uuid VARCHAR(40), data TEXT)', []);
+        } catch (e) {
+            console.log("%o", e)
+            console.log('Table trips already exists');
+            try {
+                sqlite.run('CREATE INDEX uuid_idx ON trips (uuid)', []);
+            } catch (f) {
+                console.log("%o", f)
+                console.log('Index uuid_idx already exists')
+            }
+        }
     }
 
     static getInstance() {
         if (SQLiteDataAccess._instance === undefined) {
             SQLiteDataAccess._instance = new SQLiteDataAccess();
-            sqlite.open(SQLiteDataAccess.path);
         }
         return SQLiteDataAccess._instance;
     }
@@ -44,6 +56,8 @@ class SQLiteDataAccess {
     async updateTrip(o) {
         return await sqlite.run('UPDATE trips SET data = ? WHERE uuid = ?', [JSON.stringify(o), o.uuid]);
     }
+
+
 
 }
 
