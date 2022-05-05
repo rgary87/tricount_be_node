@@ -86,7 +86,10 @@ app.get('/spending', async function (req, res) {
 app.use('/trip', tripRouter);
 app.use('/participant', participantRouter);
 
+const SQLiteDataAccess = require('./SQLiteDataAccess');
 
-const server = app.listen(port, hostname, () => {
+
+const server = app.listen(port, hostname, () => async function() {
     console.log(`Server running at http://${hostname}:${port}/`);
+    await SQLiteDataAccess.getInstance();
 });

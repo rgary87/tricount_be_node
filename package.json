@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon --inspect app.js"
   },
   "keywords": [],
   "author": "",
@@ -18,6 +18,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.3",
     "mongodb": "^4.4.0",
+    "sqlite3": "^5.0.7",
     "uuid": "^8.3.2"
   }
 }
