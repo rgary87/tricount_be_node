@@ -15,9 +15,9 @@ exports.open=function(path) {
 }
 
 // any query: insert/delete/update
-exports.run=function(query) {
+exports.run=function(query, params) {
     return new Promise(function(resolve, reject) {
-        this.db.run(query,
+        this.db.run(query, params,
             function(err)  {
                 if(err) reject(err.message)
                 else    resolve(true)

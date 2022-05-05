@@ -12,16 +12,18 @@ class SQLiteDataAccess {
             SQLiteDataAccess.path = './db.db';
         }
         sqlite.open(SQLiteDataAccess.path);
+        this.createTable();
+    }
+
+    async createTable() {
         try {
-            sqlite.run('CREATE TABLE trips (uuid VARCHAR(40), data TEXT)', []);
+            await sqlite.run('CREATE TABLE trips (uuid VARCHAR(40), data TEXT)', []);
         } catch (e) {
             console.log("%o", e)
-            console.log('Table trips already exists');
             try {
-                sqlite.run('CREATE INDEX uuid_idx ON trips (uuid)', []);
+                await sqlite.run('CREATE INDEX uuid_idx ON trips (uuid)', []);
             } catch (f) {
                 console.log("%o", f)
-                console.log('Index uuid_idx already exists')
             }
         }
     }
@@ -42,7 +44,12 @@ class SQLiteDataAccess {
     }
 
     async findOneTrip(uuid) {
-        return JSON.parse((await sqlite.get('SELECT data FROM trips WHERE uuid = ?', uuid)).data);
+        try {
+            let value = await sqlite.get('SELECT data FROM trips WHERE uuid = ?', uuid);
+            return JSON.parse(value.data);
+        } catch (e) {
+            return null;
+        }
     }
 
     async findAll() {
@@ -50,7 +57,8 @@ class SQLiteDataAccess {
     }
 
     async insert(o) {
-        return await sqlite.run('INSERT INTO trips VALUES (?, ?)', [o.uuid, JSON.stringify(o)]);
+        let res = await sqlite.run('INSERT INTO trips(uuid, data) VALUES (?, ?)', [o.uuid, JSON.stringify(o)]);
+        return res;
     }
 
     async updateTrip(o) {
